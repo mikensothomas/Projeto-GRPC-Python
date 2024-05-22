@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+service Messenger {
+    rpc Connect(ClientInfo) returns (ConnectionStatus) {}
+    rpc SendMessage(Message) returns (Empty) {}
+    rpc ReceiveMessage(Empty) returns (stream Message) {}
+}
+
+message ClientInfo {
+    string name = 1;
+}
+
+message ConnectionStatus {
+    bool connected = 1;
+}
+
+message Message {
+    string sender = 1;
+    string receiver = 2;
+    string content = 3;
+}
+
+message Empty {}
