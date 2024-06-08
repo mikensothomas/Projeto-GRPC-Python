@@ -54,6 +54,21 @@ class MessengerStub(object):
                 request_serializer=messenger__pb2.ClientInfo.SerializeToString,
                 response_deserializer=messenger__pb2.Message.FromString,
                 _registered_method=True)
+        self.ShowMenu = channel.unary_unary(
+                '/Messenger/ShowMenu',
+                request_serializer=messenger__pb2.Empty.SerializeToString,
+                response_deserializer=messenger__pb2.Menu.FromString,
+                _registered_method=True)
+        self.ChooseCategory = channel.unary_unary(
+                '/Messenger/ChooseCategory',
+                request_serializer=messenger__pb2.CategoryChoice.SerializeToString,
+                response_deserializer=messenger__pb2.Empty.FromString,
+                _registered_method=True)
+        self.ChooseItem = channel.unary_unary(
+                '/Messenger/ChooseItem',
+                request_serializer=messenger__pb2.ItemChoice.SerializeToString,
+                response_deserializer=messenger__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class MessengerServicer(object):
@@ -77,6 +92,24 @@ class MessengerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ShowMenu(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ChooseCategory(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ChooseItem(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MessengerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -94,6 +127,21 @@ def add_MessengerServicer_to_server(servicer, server):
                     servicer.ReceiveMessages,
                     request_deserializer=messenger__pb2.ClientInfo.FromString,
                     response_serializer=messenger__pb2.Message.SerializeToString,
+            ),
+            'ShowMenu': grpc.unary_unary_rpc_method_handler(
+                    servicer.ShowMenu,
+                    request_deserializer=messenger__pb2.Empty.FromString,
+                    response_serializer=messenger__pb2.Menu.SerializeToString,
+            ),
+            'ChooseCategory': grpc.unary_unary_rpc_method_handler(
+                    servicer.ChooseCategory,
+                    request_deserializer=messenger__pb2.CategoryChoice.FromString,
+                    response_serializer=messenger__pb2.Empty.SerializeToString,
+            ),
+            'ChooseItem': grpc.unary_unary_rpc_method_handler(
+                    servicer.ChooseItem,
+                    request_deserializer=messenger__pb2.ItemChoice.FromString,
+                    response_serializer=messenger__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -177,6 +225,87 @@ class Messenger(object):
             '/Messenger/ReceiveMessages',
             messenger__pb2.ClientInfo.SerializeToString,
             messenger__pb2.Message.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ShowMenu(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Messenger/ShowMenu',
+            messenger__pb2.Empty.SerializeToString,
+            messenger__pb2.Menu.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ChooseCategory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Messenger/ChooseCategory',
+            messenger__pb2.CategoryChoice.SerializeToString,
+            messenger__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ChooseItem(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Messenger/ChooseItem',
+            messenger__pb2.ItemChoice.SerializeToString,
+            messenger__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
