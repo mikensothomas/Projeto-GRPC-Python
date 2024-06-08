@@ -2,34 +2,37 @@ from concurrent import futures
 import grpc
 import messenger_pb2
 import messenger_pb2_grpc
+from queue import Queue
 
 class MessengerServicer(messenger_pb2_grpc.MessengerServicer):
     def __init__(self):
         self.clients = {}
-        self.client_stream = {}
+        self.message_queues = {}
 
     def Connect(self, request, context):
         client_name = request.name
         self.clients[client_name] = context
-        self.client_stream[client_name] = context
+        self.message_queues[client_name] = Queue()
         print(f"Cliente {client_name} conectado.")
-        if len(self.clients) == 2:
-            return messenger_pb2.ConnectionStatus(connected=True)
-        else:
-            return messenger_pb2.ConnectionStatus(connected=False)
+        return messenger_pb2.ConnectionStatus(connected=True)
 
     def SendMessage(self, request, context):
         receiver = request.receiver
-        if receiver in self.clients:
-            self.clients[receiver].send_message(request)
+        if receiver in self.message_queues:
+            message = messenger_pb2.Message(sender=request.sender, receiver=request.receiver, content=request.content)
+            self.message_queues[receiver].put(message)
+            print(f"Mensagem enviada de {request.sender} para {receiver}")
             return messenger_pb2.Empty()
         else:
+            print(f"Destinatário {receiver} não encontrado.")
             return messenger_pb2.Empty()
 
-    def ReceiveMessage(self, request, context):
+    def ReceiveMessages(self, request, context):
         client_name = request.name
-        for message in self.client_stream[client_name].incoming_messages():
-            yield message
+        while True:
+            if client_name in self.message_queues:
+                message = self.message_queues[client_name].get()
+                yield message
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

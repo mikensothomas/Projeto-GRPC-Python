@@ -49,9 +49,9 @@ class MessengerStub(object):
                 request_serializer=messenger__pb2.Message.SerializeToString,
                 response_deserializer=messenger__pb2.Empty.FromString,
                 _registered_method=True)
-        self.ReceiveMessage = channel.unary_stream(
-                '/Messenger/ReceiveMessage',
-                request_serializer=messenger__pb2.Empty.SerializeToString,
+        self.ReceiveMessages = channel.unary_stream(
+                '/Messenger/ReceiveMessages',
+                request_serializer=messenger__pb2.ClientInfo.SerializeToString,
                 response_deserializer=messenger__pb2.Message.FromString,
                 _registered_method=True)
 
@@ -71,7 +71,7 @@ class MessengerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ReceiveMessage(self, request, context):
+    def ReceiveMessages(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -90,9 +90,9 @@ def add_MessengerServicer_to_server(servicer, server):
                     request_deserializer=messenger__pb2.Message.FromString,
                     response_serializer=messenger__pb2.Empty.SerializeToString,
             ),
-            'ReceiveMessage': grpc.unary_stream_rpc_method_handler(
-                    servicer.ReceiveMessage,
-                    request_deserializer=messenger__pb2.Empty.FromString,
+            'ReceiveMessages': grpc.unary_stream_rpc_method_handler(
+                    servicer.ReceiveMessages,
+                    request_deserializer=messenger__pb2.ClientInfo.FromString,
                     response_serializer=messenger__pb2.Message.SerializeToString,
             ),
     }
@@ -161,7 +161,7 @@ class Messenger(object):
             _registered_method=True)
 
     @staticmethod
-    def ReceiveMessage(request,
+    def ReceiveMessages(request,
             target,
             options=(),
             channel_credentials=None,
@@ -174,8 +174,8 @@ class Messenger(object):
         return grpc.experimental.unary_stream(
             request,
             target,
-            '/Messenger/ReceiveMessage',
-            messenger__pb2.Empty.SerializeToString,
+            '/Messenger/ReceiveMessages',
+            messenger__pb2.ClientInfo.SerializeToString,
             messenger__pb2.Message.FromString,
             options,
             channel_credentials,

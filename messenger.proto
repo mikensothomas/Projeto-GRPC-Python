@@ -1,9 +1,9 @@
 syntax = "proto3";
 
 service Messenger {
-    rpc Connect(ClientInfo) returns (ConnectionStatus) {}
-    rpc SendMessage(Message) returns (Empty) {}
-    rpc ReceiveMessage(Empty) returns (stream Message) {}
+    rpc Connect (ClientInfo) returns (ConnectionStatus);
+    rpc SendMessage (Message) returns (Empty);
+    rpc ReceiveMessages (ClientInfo) returns (stream Message);
 }
 
 message ClientInfo {
