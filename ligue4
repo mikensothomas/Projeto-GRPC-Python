@@ -1,0 +1,91 @@
+def draw_board(board):
+    """
+    Função para desenhar o tabuleiro Connect Four.
+
+    Args:
+    - board: Uma lista de listas representando o tabuleiro do jogo.
+    """
+    for row in board:
+        print("|", end="")
+        for cell in row:
+            print(f" {cell} |", end="")
+        print("\n" + "-" * (len(row) * 4 + 1))
+
+def drop_piece(board, col, player):
+    """
+    Função para colocar uma peça no tabuleiro Connect Four.
+
+    Args:
+    - board: O tabuleiro do jogo.
+    - col: A coluna onde a peça será colocada.
+    - player: O jogador que está colocando a peça (1 ou 2).
+    """
+    for row in range(len(board) - 1, -1, -1):
+        if board[row][col] == ' ':
+            board[row][col] = player
+            return True
+    return False
+
+def check_winner(board, player):
+    # Verificar vitória horizontal
+    for row in range(len(board)):
+        for col in range(len(board[0]) - 3):
+            if board[row][col] == player and board[row][col+1] == player and board[row][col+2] == player and board[row][col+3] == player:
+                return True
+
+    # Verificar vitória vertical
+    for col in range(len(board[0])):
+        for row in range(len(board) - 3):
+            if board[row][col] == player and board[row+1][col] == player and board[row+2][col] == player and board[row+3][col] == player:
+                return True
+
+    # Verificar vitória diagonal (para cima)
+    for row in range(3, len(board)):
+        for col in range(len(board[0]) - 3):
+            if board[row][col] == player and board[row-1][col+1] == player and board[row-2][col+2] == player and board[row-3][col+3] == player:
+                return True
+
+    # Verificar vitória diagonal (para baixo)
+    for row in range(len(board) - 3):
+        for col in range(len(board[0]) - 3):
+            if board[row][col] == player and board[row+1][col+1] == player and board[row+2][col+2] == player and board[row+3][col+3] == player:
+                return True
+
+    return False
+
+def main():
+    # Criar um tabuleiro de Connect Four vazio (6 linhas x 7 colunas)
+    board = [[' ' for _ in range(7)] for _ in range(6)]
+    current_player = 1
+
+    # Loop principal do jogo
+    while True:
+    
+        
+        # Desenhar o tabuleiro atual
+        draw_board(board)
+        
+        # Solicitar ao jogador atual para escolher uma coluna
+        col = int(input(f"Jogador {current_player}, escolha uma coluna (1-7): ")) - 1
+        
+        # Validar a entrada do jogador
+        if col < 0 or col >= 7 or board[0][col] != ' ':
+            print("Escolha inválida. Tente novamente.")
+            continue
+        
+        # Colocar a peça no tabuleiro
+        if drop_piece(board, col, current_player):
+            # Verificar se houve um vencedor
+            if check_winner(board, current_player):
+                draw_board(board)
+                print(f"Jogador {current_player} venceu!")
+                break
+            
+            # Alternar para o próximo jogador
+            current_player = 1 if current_player == 2 else 2
+        
+        # Verificar se houve um empate (implementação não incluída)
+
+# Chamar a função main para iniciar o jogo
+if __name__ == "__main__":
+    main()
