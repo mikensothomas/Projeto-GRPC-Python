@@ -14,7 +14,8 @@ def send_message(stub, sender, receiver, content):
 
 def receive_messages(stub, client_name):
     for message in stub.ReceiveMessages(messenger_pb2.ClientInfo(name=client_name)):
-        print(f"Mensagem recebida de {message.sender}: {message.content}")
+        print(f"\nMensagem recebida de {message.sender}: {message.content}", flush=True)
+        print(f"\nDigite uma mensagem para enviar (ou 'sair' para sair): ", end='', flush=True)
 
 def main():
     server_address = 'localhost:50051'
